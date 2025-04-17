@@ -1,0 +1,112 @@
+package transactions;
+
+import java.awt.AWTException;
+import java.io.IOException;
+import java.sql.SQLException;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.Test;
+import frameworkLibrary.BaseClass;
+import pageobjects.CL_Applicationfor_Serviceson_CLPage01;
+import pageobjects.CL_Applicationfor_Serviceson_CLPage02;
+import pageobjects.CL_DuplicateCL_ApplicationAcknowledgementPage;
+import pageobjects.CL_Services_DuplicateCLPage;
+import pageobjects.StateSelectionPage;
+import pageobjects.StateSpecificHomePage;
+import utility.Flows;
+import utility.Utilitymethods;
+
+public class Transaction_554 extends BaseClass {
+	WebDriver driver;
+
+
+
+
+
+
+	
+	Flows validate;
+	Utilitymethods utility;
+
+	public void TC_DuplicateCL()
+			throws ClassNotFoundException, IOException, SQLException, InterruptedException, AWTException {
+
+		Utilitymethods utilitymethods = new Utilitymethods(driver);
+		driver = utilitymethods.Launch_ApplicationUrl();
+		// utilitymethods.ArrangeDataSet();
+		StateSelectionPage stateSelectionPage = new StateSelectionPage(driver);
+		stateSelectionPage.Selectstatename(getdata("State"));
+		StateSpecificHomePage stateSpecificHomePage = new StateSpecificHomePage(driver);
+		stateSpecificHomePage.closeContactlessLicenceServicesPopup();
+		stateSpecificHomePage.Mouserhoveron_ConductorLicence();
+		stateSpecificHomePage.Clickon_ServicesOnConductorLicence();
+
+		CL_Applicationfor_Serviceson_CLPage01 clservice = new CL_Applicationfor_Serviceson_CLPage01(driver);
+		clservice.Enter_ConductorLicencenumber(getdata("CLNumber"));
+		clservice.Enter_DateOfBirth(getdata("DateOfBirth"));
+		clservice.Enter_Captcha("123456");
+		clservice.Clickon_Proceed();
+		CL_Applicationfor_Serviceson_CLPage02 clservice1 = new CL_Applicationfor_Serviceson_CLPage02(driver);
+		clservice1.Enter_MobileNumber(getdata("MobileNumber"));
+		clservice1.Clickon_Confirm();
+		clservice1.Select_RtoOffice(getdata("RTOOffice"));
+		clservice1.Clickon_Go();
+		clservice1.Clickon_DuplicateCL();
+		clservice1.Clickon_Submitbutton();
+		utility = new Utilitymethods(driver);
+		utility.authentication();
+
+		CL_Services_DuplicateCLPage duplicate = new CL_Services_DuplicateCLPage(driver);
+		duplicate.Clickon_ShoworHidePersonalandLicenceDetails();
+		duplicate.Select_ReasonForDuplicateCL(getdata("ReasonForDuplicateCL"));
+		duplicate.Clickon_Confirm();
+		duplicate.Clickon_Submit();
+		CL_DuplicateCL_ApplicationAcknowledgementPage acknowledgement = new CL_DuplicateCL_ApplicationAcknowledgementPage(
+				driver);
+		acknowledgement.Capture_CLService_AcknowledgementDetails();
+		Utilitymethods utilities = new Utilitymethods(driver);
+		utilities.Validating_Flows();
+
+	}
+
+	public void CL_Service_ApplicationStatus() throws AWTException, IOException, ClassNotFoundException, SQLException {
+
+		Utilitymethods utilitymethods = new Utilitymethods(driver);
+		driver = utilitymethods.Launch_ApplicationUrl();
+		// utilitymethods.ArrangeDataSet();
+		StateSelectionPage stateSelectionPage = new StateSelectionPage(driver);
+		stateSelectionPage.Selectstatename(getdata("State"));
+		StateSpecificHomePage stateSpecificHomePage = new StateSpecificHomePage(driver);
+		stateSpecificHomePage.closeContactlessLicenceServicesPopup();
+
+		//appstatus = new ApplicationStatusPage(driver);
+		//appstatus.Clickon_Application_Status();
+		//appstatus.Set_Application_Number(getdata("ApplicationNo"));
+		//appstatus.Set_DateofBirth(getdata("DateofBirth"));
+		//appstatus.enterCaptcha();
+		// driver.findElement(By.xpath("//input[@id =
+		// 'entcaptxt']")).sendKeys("123456");
+		//appstatus.Clickon_Submit_Button();
+		Utilitymethods utility = new Utilitymethods(driver);
+		utility.Validating_Flows();
+
+	}
+
+	@Test(invocationCount = 1)
+	public void CL_Service()
+			throws AWTException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+		// String Testcase = getdata("Scenario");
+		String Testcase = "TC_CL_Service";
+		System.out.println("Testcase is : " + Testcase);
+
+		if (Testcase.equalsIgnoreCase("TC_CL_Service")) {
+			System.out.println("inside NewConductorLicence");
+			TC_DuplicateCL();
+		}
+
+		else if (Testcase.equalsIgnoreCase("TC_ApplicationStatus")) {
+			System.out.println("inside ApplicationStatus");
+			CL_Service_ApplicationStatus();
+		}
+	}
+
+}
